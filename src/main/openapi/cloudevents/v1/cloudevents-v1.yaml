@@ -1,0 +1,10 @@
+openapi: "3.0.4"
+info:
+  title: Reusable components for CloudEvents
+  version: "${project.version}"
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers: []
+paths: {}
+components: {}
