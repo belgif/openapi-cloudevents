@@ -1,6 +1,7 @@
-openapi: "3.0.4"
+openapi: "3.0.3"
 info:
   title: Reusable components for CloudEvents
+  description: The definitions comply with the [JSON format](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md) of the [CloudEvents 1.0 specification](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
   version: "${project.version}"
   license:
     name: Apache 2.0
