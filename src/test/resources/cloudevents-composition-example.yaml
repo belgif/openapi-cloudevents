@@ -44,6 +44,7 @@ components:
             - "be.nsso.employer.address.updated"
             - "be.nsso.employer.address.added"
             - "be.nsso.employer.address.removed"
+      required: [type]
       allOf:
         - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/CloudEventBase"
       oneOf:

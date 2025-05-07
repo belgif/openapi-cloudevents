@@ -180,4 +180,4 @@ components:
           minLength: 1
           nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
           format: uri
-      required: [id, specversion, source, type]
+      required: [id, specversion, source]
