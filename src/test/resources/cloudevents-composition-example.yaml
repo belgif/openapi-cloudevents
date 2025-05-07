@@ -17,6 +17,7 @@ paths:
             type: string
       responses:
         "200":
+          description: Batch of cloud events
           content:
             application/cloudevents-batch+json:
               schema:

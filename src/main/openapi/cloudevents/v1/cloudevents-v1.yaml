@@ -183,22 +183,30 @@ components:
           description: Media type of the payload (values of data or data_base64).
             MUST adhere to the format specified in RFC 2046.
           default: "application/json"
-          nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
+          nullable: true
+          x-ignore-rules:
+            jsn-null: allow null to comply with CloudEvents 1.0 spec
         subject:
           type: string
           minLength: 1
           description: Subject of the event (optional, may also be only present in payload)
           example: "employer:123456"
-          nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
+          nullable: true
+          x-ignore-rules:
+            jsn-null: allow null to comply with CloudEvents 1.0 spec
         time:
           type: string
           format: date-time
           description: Timestamp of when the occurrence happened. If the time of the occurrence cannot be determined then this attribute MAY be set to some other time (such as the current time) by the CloudEvents producer, however all producers for the same source MUST be consistent in this respect. In other words, either they all use the actual time of the occurrence or they all use the same algorithm to determine the value used.
-          nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
+          nullable: true
+          x-ignore-rules:
+            jsn-null: allow null to comply with CloudEvents 1.0 spec
         dataschema:
           description: Identifies the schema that data adheres to. Incompatible changes to the schema SHOULD be reflected by a different URI.
           type: string
           minLength: 1
-          nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
+          nullable: true
           format: uri
+          x-ignore-rules:
+            jsn-null: allow null to comply with CloudEvents 1.0 spec
       required: [id, specversion, source]
