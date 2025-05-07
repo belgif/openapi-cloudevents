@@ -126,3 +126,58 @@ components:
       required: [id, specversion, source, type]
       x-ignore-rules:
         jsn-naming: allow underscore in data_base64 property in order to comply with the CloudEvents standard
+    CloudEventBase: # extend this schema with allOf to define schemas for specific events, with constraints on data/data_base64 and type
+      type: object
+      properties:
+        specversion:
+          type: string
+          minLength: 1
+          description: The version of the CloudEvents specification which the event uses.
+          example: "1.0"
+        id:
+          type: string
+          minLength: 1
+          description: Identifies the event. Producers MUST ensure that source + id is unique for each distinct event. If a duplicate event is re-sent (e.g. due to a network error) it MAY have the same id. Consumers MAY assume that Events with identical source and id are duplicates.
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        source:
+          type: string
+          format: uri-reference
+          minLength: 1
+          description: >
+            Identifies the context in which an event happened.<br>
+            Often this will include information such as the type of the event source, the organization publishing the event or the process that produced the event. The exact syntax and semantics behind the data encoded in the URI is defined by the event producer.<br>
+
+            Producers MUST ensure that source + id is unique for each distinct event.<br>
+            
+            An application MAY assign a unique source to each distinct producer, which makes it
+            easy to produce unique IDs since no other producer will have the same source.
+            The application MAY use UUIDs, URNs, DNS authorities or an application-specific
+            scheme to create unique source identifiers.<br>
+            
+            An absolute URI is RECOMMENDED
+          example: "urn:event-source:nsso:employer-register"
+        datacontenttype:
+          type: string
+          minLength: 1
+          description: Media type of the payload (values of data or data_base64).
+            MUST adhere to the format specified in RFC 2046.
+          default: "application/json"
+          nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
+        subject:
+          type: string
+          minLength: 1
+          description: Subject of the event (optional, may also be only present in payload)
+          example: "employer:123456"
+          nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
+        time:
+          type: string
+          format: date-time
+          description: Timestamp of when the occurrence happened. If the time of the occurrence cannot be determined then this attribute MAY be set to some other time (such as the current time) by the CloudEvents producer, however all producers for the same source MUST be consistent in this respect. In other words, either they all use the actual time of the occurrence or they all use the same algorithm to determine the value used.
+          nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
+        dataschema:
+          description: Identifies the schema that data adheres to. Incompatible changes to the schema SHOULD be reflected by a different URI.
+          type: string
+          minLength: 1
+          nullable: true # recommended to omit property instead of using null, but null is allowed to improve interoperability with 3rd party CloudEvents implementations
+          format: uri
+      required: [id, specversion, source, type]

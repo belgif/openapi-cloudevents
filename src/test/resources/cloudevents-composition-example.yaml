@@ -1,0 +1,118 @@
+openapi: "3.0.3"
+info:
+  title: Reusable components for CloudEvents
+  description: The definitions comply with the [JSON format](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md) of the [CloudEvents 1.0 specification](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
+  version: "${project.version}"
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers: []
+paths:
+  /events:
+    get:
+      parameters:
+        - name: "cursor"
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/cloudevents-batch+json:
+              schema:
+                $ref: "#/components/schemas/CloudEventBatch"
+              x-ignore-rules:
+                evo-object: allow array as top level data structure in order to comply with the CloudEvents standard
+components:
+  schemas:
+    CloudEventBatch:
+      type: array
+      items:
+        $ref: "#/components/schemas/AddressEvent"
+    AddressEvent:
+      type: object
+      properties:
+        type:
+          description: >
+            Type of event of the originating occurrence.<br>
+            Often this attribute is used for routing, observability, policy enforcement, etc. The format of this is producer defined and might include information such as the version of the type.<br>
+
+            SHOULD be prefixed with a reverse-DNS name. The prefixed domain dictates the organization which defines the semantics of this event type.
+          type: string
+          minLength: 1
+          enum:
+            - "be.nsso.employer.address.updated"
+            - "be.nsso.employer.address.added"
+            - "be.nsso.employer.address.removed"
+      allOf:
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/CloudEventBase"
+      oneOf:
+        - $ref: "#/components/schemas/AddressAddedEvent"
+        - $ref: "#/components/schemas/AddressRemovedEvent"
+        - $ref: "#/components/schemas/AddressUpdatedEvent"
+      discriminator:
+        propertyName: type
+        mapping:
+          "be.nsso.employer.address.updated": AddressUpdateEvent
+          "be.nsso.employer.address.added": AddressAddedEvent
+          "be.nsso.employer.address.removed": AddressRemovedEvent
+
+    AddressAddedEvent:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AddressEvent"
+      properties:
+        data:
+          description: The event payload in JSON format
+          type: object
+          properties:
+            employerId:
+              type: string
+            addedAddress:
+              $ref: "#/components/schemas/Address"
+          required: [employerId, addedAddress]
+      required: [data]
+    AddressRemovedEvent:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AddressEvent"
+      properties:
+        data:
+          description: The event payload in JSON format
+          type: object
+          properties:
+            employerId:
+              type: string
+            removedAddressId:
+              type: string
+          required: [employerId, removedAddressId]
+      required: [ data ]
+    AddressUpdatedEvent:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AddressEvent"
+      properties:
+        data:
+          description: The event payload in JSON format
+          type: object
+          properties:
+            employerId:
+              type: string
+            oldAddress:
+              $ref: "#/components/schemas/Address"
+            newAddress:
+              $ref: "#/components/schemas/Address"
+          required: [employerId, oldAddress, newAddress]
+      required: [ data ]
+    Address:
+      type: object
+      properties:
+        id:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        country:
+          type: string
+      required: [id, country, addressLine1]
