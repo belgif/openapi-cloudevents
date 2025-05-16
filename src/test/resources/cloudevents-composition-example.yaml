@@ -45,6 +45,8 @@ components:
             - "be.nsso.employer.address.updated"
             - "be.nsso.employer.address.added"
             - "be.nsso.employer.address.removed"
+          x-ignore-rules:
+            "cod-design": "event types use reverse DNS dot-notation, with only parts between dots in lowerCamelCase"
       required: [type]
       allOf:
         - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/CloudEventBase"
