@@ -128,22 +128,25 @@ components:
           format: uri
           x-ignore-rules:
             jsn-null: allow null to comply with CloudEvents 1.0 spec
-      additionalProperties:
-        # The CloudEvents specification only supports below types for context attributes, to maximize messaging protocol compatibility
-        oneOf:
-          - type: string  # includes attributes with base64-encoded, uri, uri-reference or timestamp types
-            nullable: true
-            x-ignore-rules:
-              jsn-null: allow null to comply with CloudEvents 1.0 spec
-          - type: integer
-            format: int32
-            nullable: true
-            x-ignore-rules:
-              jsn-null: allow null to comply with CloudEvents 1.0 spec
-          - type: boolean
-            nullable: true
-            x-ignore-rules:
-              jsn-null: allow null to comply with CloudEvents 1.0 spec
+
+         # restrictions on additional properties are commented out because they don't work well for code generation
+
+#      additionalProperties:
+#        # The CloudEvents specification only supports below types for context attributes, to maximize messaging protocol compatibility
+#        oneOf:
+#          - type: string  # includes attributes with base64-encoded, uri, uri-reference or timestamp types
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
+#          - type: integer
+#            format: int32
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
+#          - type: boolean
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
       required: [id, specversion, source, type]
       x-ignore-rules:
         jsn-naming: allow underscore in data_base64 property in order to comply with the CloudEvents standard
