@@ -10,7 +10,7 @@ servers: []
 paths: {}
 components:
   responses:
-    CloudEventStructuredResponse:
+    CloudEventResponse:
       description: "An event"
       content:
         application/cloudevents+json:
