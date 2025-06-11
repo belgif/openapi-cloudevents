@@ -10,6 +10,7 @@ servers: []
 paths:
   /events:
     get:
+      operationId: getEvents
       parameters:
         - name: "cursor"
           in: query
@@ -50,17 +51,12 @@ components:
       required: [type]
       allOf:
         - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/CloudEventBase"
-      oneOf:
-        - $ref: "#/components/schemas/AddressAddedEvent"
-        - $ref: "#/components/schemas/AddressRemovedEvent"
-        - $ref: "#/components/schemas/AddressUpdatedEvent"
       discriminator:
         propertyName: type
         mapping:
-          "be.nsso.employer.address.updated": AddressUpdateEvent
+          "be.nsso.employer.address.updated": AddressUpdatedEvent
           "be.nsso.employer.address.added": AddressAddedEvent
           "be.nsso.employer.address.removed": AddressRemovedEvent
-
     AddressAddedEvent:
       type: object
       allOf:
