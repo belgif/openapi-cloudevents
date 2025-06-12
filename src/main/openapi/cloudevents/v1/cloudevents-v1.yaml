@@ -10,7 +10,7 @@ servers: []
 paths: {}
 components:
   responses:
-    CloudEventStructuredResponse:
+    CloudEventResponse:
       description: "An event"
       content:
         application/cloudevents+json:
@@ -45,6 +45,8 @@ components:
       items:
         $ref: "#/components/schemas/CloudEvent"
     CloudEvent:
+      description: An event expressing an occurrence and its context, represented using the [CloudEvents standard](https://github.com/cloudevents/spec). 
+        A CloudEvent may be extended with additional context attributes, which should follow the naming and typing constraints specified by the [CloudEvents specification](https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md#context-attributes).
       type: object
       properties:
         specversion:
@@ -128,22 +130,29 @@ components:
           format: uri
           x-ignore-rules:
             jsn-null: allow null to comply with CloudEvents 1.0 spec
-      additionalProperties:
+      additionalProperties: true
+        # restrictions on additional properties are commented out because they don't work well for code generation
+        # additional context attributes:
+        #       MUST consist of lower-case letters [a-z] or digits [0-9] from the ASCII character set.
+        #       SHOULD start with a letter.
+        #       MUST be at least one character in length, and SHOULD NOT exceed 20 characters.
+        #       SHOULD be descriptive and terse.
         # The CloudEvents specification only supports below types for context attributes, to maximize messaging protocol compatibility
-        oneOf:
-          - type: string  # includes attributes with base64-encoded, uri, uri-reference or timestamp types
-            nullable: true
-            x-ignore-rules:
-              jsn-null: allow null to comply with CloudEvents 1.0 spec
-          - type: integer
-            format: int32
-            nullable: true
-            x-ignore-rules:
-              jsn-null: allow null to comply with CloudEvents 1.0 spec
-          - type: boolean
-            nullable: true
-            x-ignore-rules:
-              jsn-null: allow null to comply with CloudEvents 1.0 spec
+        # See https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md#type-system and https://github.com/cloudevents/spec/blob/main/cloudevents/formats/json-format.md#22-type-system-mapping
+#        oneOf:
+#          - type: string  # includes attributes with base64-encoded, uri, uri-reference or timestamp types
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
+#          - type: integer
+#            format: int32
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
+#          - type: boolean
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
       required: [id, specversion, source, type]
       x-ignore-rules:
         jsn-naming: allow underscore in data_base64 property in order to comply with the CloudEvents standard
