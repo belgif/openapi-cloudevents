@@ -10,23 +10,6 @@ paths: {}
 components:
   schemas:
     AddressEvent:
-      type: object
-      properties:
-        type:
-          description: >
-            Type of event of the originating occurrence.<br>
-            Often this attribute is used for routing, observability, policy enforcement, etc. The format of this is producer defined and might include information such as the version of the type.<br>
-
-            SHOULD be prefixed with a reverse-DNS name. The prefixed domain dictates the organization which defines the semantics of this event type.
-          type: string
-          minLength: 1
-          enum:
-            - "be.nsso.employer.address.updated"
-            - "be.nsso.employer.address.added"
-            - "be.nsso.employer.address.removed"
-          x-ignore-rules:
-            "cod-design": "event types use reverse DNS dot-notation, with only parts between dots in lowerCamelCase"
-      required: [type]
       allOf:
         - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/CloudEventBase"
       discriminator:

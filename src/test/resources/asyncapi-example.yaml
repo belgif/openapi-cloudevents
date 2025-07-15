@@ -6,7 +6,7 @@ info:
     The employer event API allows you
     to do something....
 servers:
-  httpServer:
+  artemisJmsBroker:
     #jms bindings from https://github.com/asyncapi/bindings/tree/master/jms#server
     host: 'my-broker:1234'
     protocol: jms
@@ -24,7 +24,7 @@ channels:
       # addressRemoved:
       #   $ref: '#/components/messages/AddressRemovedEvent'
       "org.example.employer.v1.address.updated":
-        $ref: '#/components/messages/AddressUpdatedEvent'
+        $ref: '#/components/messages/org.example.employer.v1.address.updated'
 operations:
   receiveAddressNotification:
     summary: "Receive events related to addresses"
@@ -43,8 +43,7 @@ components:
     #     schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
     #     schema:
     #       $ref: './composition-example.yaml#/components/schemas/AddressRemovedEvent'
-    AddressUpdatedEvent:
-      summary: "org.example.employer.v1.address.updated"
+    "org.example.employer.v1.address.updated":
       payload:
         schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
         schema:

@@ -9,6 +9,7 @@ servers: []
 paths:
   /events:
     get:
+      summary: Retrieve address change events
       operationId: getEvents
       parameters:
         - name: "cursor"
@@ -24,6 +25,23 @@ paths:
                 $ref: "#/components/schemas/AddressCloudEventBatch"
               x-ignore-rules:
                 evo-object: allow array as top level data structure in order to comply with the CloudEvents standard
+        default:
+          $ref: "./belgif/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
+    post:
+      summary: Register an address change event
+      operationId: createEvent
+      requestBody:
+        content:
+          application/cloudevents+json:
+            schema:
+              $ref: "./composition-example.yaml#/components/schemas/AddressEvent"
+        required: true
+      responses:
+        "201":
+          description: Event created
+        default:
+          $ref: "./belgif/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
+
 components:
   schemas:
     AddressCloudEventBatch:
