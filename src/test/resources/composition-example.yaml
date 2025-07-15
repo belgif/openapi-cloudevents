@@ -1,36 +1,14 @@
 openapi: "3.0.3"
 info:
-  title: Reusable components for CloudEvents
-  description: The definitions comply with the [JSON format](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md) of the [CloudEvents 1.0 specification](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
+  title: Example of event schemas using CloudEventBase schema
   version: "${project.version}"
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers: []
-paths:
-  /events:
-    get:
-      operationId: getEvents
-      parameters:
-        - name: "cursor"
-          in: query
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Batch of cloud events
-          content:
-            application/cloudevents-batch+json:
-              schema:
-                $ref: "#/components/schemas/CloudEventBatch"
-              x-ignore-rules:
-                evo-object: allow array as top level data structure in order to comply with the CloudEvents standard
+paths: {}
 components:
   schemas:
-    CloudEventBatch:
-      type: array
-      items:
-        $ref: "#/components/schemas/AddressEvent"
     AddressEvent:
       type: object
       properties:

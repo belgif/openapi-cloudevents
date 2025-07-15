@@ -1,0 +1,32 @@
+openapi: "3.0.3"
+info:
+  title: Example of events exchanged within a REST pull API
+  version: "${project.version}"
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers: []
+paths:
+  /events:
+    get:
+      operationId: getEvents
+      parameters:
+        - name: "cursor"
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Batch of cloud events
+          content:
+            application/cloudevents-batch+json:
+              schema:
+                $ref: "#/components/schemas/AddressCloudEventBatch"
+              x-ignore-rules:
+                evo-object: allow array as top level data structure in order to comply with the CloudEvents standard
+components:
+  schemas:
+    AddressCloudEventBatch:
+      type: array
+      items:
+        $ref: "./composition-example.yaml#/components/schemas/AddressEvent"
