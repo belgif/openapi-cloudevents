@@ -1,0 +1,53 @@
+asyncapi: 3.0.0
+info:
+  title: Employer events
+  version: 1.0.0
+  description: |
+    The employer event API allows you
+    to do something....
+defaultContentType: application/json
+servers:
+  artemisJmsBroker:
+    #jms bindings from https://github.com/asyncapi/bindings/tree/master/jms#server
+    host: 'my-broker:1234'
+    protocol: jms
+    description: The broker accessed via JMS.
+    bindings:
+      jms:
+        jmsConnectionFactory: org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory
+channels:
+  AddressEventsChannel:
+    summary: Employer address changes
+    address: org.example.employer.address.v1
+    messages: #Spec defines that "Every message sent to this channel MUST be valid against one, and only one, of the message objects defined in this map."
+      # addressAdded:
+      #   $ref: '#/components/messages/AddressAddedEvent'
+      # addressRemoved:
+      #   $ref: '#/components/messages/AddressRemovedEvent'
+      "org.example.employer.v1.address.updated":
+        $ref: '#/components/messages/org.example.employer.v1.address.updated'
+operations:
+  receiveAddressNotification:
+    summary: "Receive events related to addresses"
+    action: receive
+    channel:
+      $ref: '#/channels/AddressEventsChannel'
+components:
+  # Problem with asyncapi parser when multiple messages are defined, see https://github.com/asyncapi/parser-js/issues/1101
+  messages:
+    # AddressAddedEvent:
+    #   payload:
+    #     schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
+    #     schema:
+    #       $ref: './composition-example.yaml#/components/schemas/AddressAddedEvent'
+    # AddressRemovedEvent:
+    #   payload:
+    #     schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
+    #     schema:
+    #       $ref: './composition-example.yaml#/components/schemas/AddressRemovedEvent'
+    "org.example.employer.v1.address.updated":
+      payload:
+        schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
+        schema:
+          $ref: './composition-example.yaml#/components/schemas/AddressUpdatedEvent'
+  

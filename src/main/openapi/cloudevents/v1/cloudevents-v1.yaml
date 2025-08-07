@@ -9,44 +9,53 @@ info:
 servers: []
 paths: {}
 components:
-  responses:
-    CloudEventResponse:
-      description: "An event"
-      content:
-        application/cloudevents+json:
-          schema:
-            $ref: "#/components/schemas/CloudEvent"
-    CloudEventBatchResponse:
-      description: "Batch of events"
-      content:
-        application/cloudevents-batch+json:
-          schema:
-            $ref: "#/components/schemas/CloudEventBatch"
-          x-ignore-rules:
-            evo-object: allow array as top level data structure in order to comply with the CloudEvents standard
-  requestBodies:
-    CloudEventRequest:
-      required: true
-      content:
-        application/cloudevents+json:
-          schema:
-            $ref: "#/components/schemas/CloudEvent"
-    CloudEventBatchRequest:
-      required: true
-      content:
-        application/cloudevents-batch+json:
-          schema:
-            $ref: "#/components/schemas/CloudEventBatch"
-          x-ignore-rules:
-            evo-object: allow array as top level data structure in order to comply with the CloudEvents standard
   schemas:
-    CloudEventBatch:
-      type: array
-      items:
-        $ref: "#/components/schemas/CloudEvent"
     CloudEvent:
       description: An event expressing an occurrence and its context, represented using the [CloudEvents standard](https://github.com/cloudevents/spec). 
         A CloudEvent may be extended with additional context attributes, which should follow the naming and typing constraints specified by the [CloudEvents specification](https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md#context-attributes).
+      allOf:
+      - $ref: "#/components/schemas/CloudEventBase"
+      type: object
+      properties:
+        data:
+          description: The event payload in JSON format
+          nullable: true
+          x-ignore-rules:
+            jsn-null: allow null to comply with CloudEvents 1.0 spec
+        data_base64:
+          description: Base64 encoded event payload. Must adhere to RFC4648. This property is mutually exclusive with `data`.
+          type: string
+          format: byte
+          nullable: true
+          x-ignore-rules:
+            jsn-null: allow null to comply with CloudEvents 1.0 spec
+          example: "Zm9vYg=="
+      additionalProperties: true
+        # restrictions on additional properties are commented out because they don't work well for code generation
+        # additional context attributes:
+        #       MUST consist of lower-case letters [a-z] or digits [0-9] from the ASCII character set.
+        #       SHOULD start with a letter.
+        #       MUST be at least one character in length, and SHOULD NOT exceed 20 characters.
+        #       SHOULD be descriptive and terse.
+        # The CloudEvents specification only supports below types for context attributes, to maximize messaging protocol compatibility
+        # See https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md#type-system and https://github.com/cloudevents/spec/blob/main/cloudevents/formats/json-format.md#22-type-system-mapping
+#        oneOf:
+#          - type: string  # includes attributes with base64-encoded, uri, uri-reference or timestamp types
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
+#          - type: integer
+#            format: int32
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
+#          - type: boolean
+#            nullable: true
+#            x-ignore-rules:
+#              jsn-null: allow null to comply with CloudEvents 1.0 spec
+      x-ignore-rules:
+        jsn-naming: allow underscore in data_base64 property in order to comply with the CloudEvents standard
+    CloudEventBase: # extend this schema with allOf to define schemas for specific events, with constraints on data/data_base64 and type
       type: object
       properties:
         specversion:
@@ -54,6 +63,11 @@ components:
           minLength: 1
           description: The version of the CloudEvents specification which the event uses.
           example: "1.0"
+        id:
+          type: string
+          minLength: 1
+          description: Identifies the event. Producers MUST ensure that source + id is unique for each distinct event. If a duplicate event is re-sent (e.g. due to a network error) it MAY have the same id. Consumers MAY assume that Events with identical source and id are duplicates.
+          example: "550e8400-e29b-41d4-a716-446655440000"
         type:
           description: >
             Type of event of the originating occurrence.<br>
@@ -63,11 +77,6 @@ components:
           type: string
           minLength: 1
           example: "be.nsso.employer.address.updated"
-        id:
-          type: string
-          minLength: 1
-          description: Identifies the event. Producers MUST ensure that source + id is unique for each distinct event. If a duplicate event is re-sent (e.g. due to a network error) it MAY have the same id. Consumers MAY assume that Events with identical source and id are duplicates.
-          example: "550e8400-e29b-41d4-a716-446655440000"
         source:
           type: string
           format: uri-reference
@@ -109,19 +118,6 @@ components:
           nullable: true
           x-ignore-rules:
             jsn-null: allow null to comply with CloudEvents 1.0 spec
-        data:
-          description: The event payload in JSON format
-          nullable: true
-          x-ignore-rules:
-            jsn-null: allow null to comply with CloudEvents 1.0 spec
-        data_base64:
-          description: Base64 encoded event payload. Must adhere to RFC4648. This property is mutually exclusive with `data`.
-          type: string
-          format: byte
-          nullable: true
-          x-ignore-rules:
-            jsn-null: allow null to comply with CloudEvents 1.0 spec
-          example: "Zm9vYg=="
         dataschema:
           description: Identifies the schema that data adheres to. Incompatible changes to the schema SHOULD be reflected by a different URI.
           type: string
@@ -130,29 +126,4 @@ components:
           format: uri
           x-ignore-rules:
             jsn-null: allow null to comply with CloudEvents 1.0 spec
-      additionalProperties: true
-        # restrictions on additional properties are commented out because they don't work well for code generation
-        # additional context attributes:
-        #       MUST consist of lower-case letters [a-z] or digits [0-9] from the ASCII character set.
-        #       SHOULD start with a letter.
-        #       MUST be at least one character in length, and SHOULD NOT exceed 20 characters.
-        #       SHOULD be descriptive and terse.
-        # The CloudEvents specification only supports below types for context attributes, to maximize messaging protocol compatibility
-        # See https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md#type-system and https://github.com/cloudevents/spec/blob/main/cloudevents/formats/json-format.md#22-type-system-mapping
-#        oneOf:
-#          - type: string  # includes attributes with base64-encoded, uri, uri-reference or timestamp types
-#            nullable: true
-#            x-ignore-rules:
-#              jsn-null: allow null to comply with CloudEvents 1.0 spec
-#          - type: integer
-#            format: int32
-#            nullable: true
-#            x-ignore-rules:
-#              jsn-null: allow null to comply with CloudEvents 1.0 spec
-#          - type: boolean
-#            nullable: true
-#            x-ignore-rules:
-#              jsn-null: allow null to comply with CloudEvents 1.0 spec
-      required: [id, specversion, source, type]
-      x-ignore-rules:
-        jsn-naming: allow underscore in data_base64 property in order to comply with the CloudEvents standard
+      required: [id, type, specversion, source]

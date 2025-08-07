@@ -1,0 +1,85 @@
+openapi: "3.0.3"
+info:
+  title: Example of event schemas using CloudEventBase schema
+  version: "${project.version}"
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers: []
+paths: {}
+components:
+  schemas:
+    AddressEvent:
+      allOf:
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/CloudEventBase"
+      discriminator:
+        propertyName: type
+        mapping:
+          "be.nsso.employer.address.updated": AddressUpdatedEvent
+          "be.nsso.employer.address.added": AddressAddedEvent
+          "be.nsso.employer.address.removed": AddressRemovedEvent
+    AddressAddedEvent:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AddressEvent"
+      properties:
+        data:
+          $ref: "#/components/schemas/AddressAddition"
+      required: [data]
+    AddressRemovedEvent:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AddressEvent"
+      properties:
+        data:
+          $ref: "#/components/schemas/AddressRemoval"
+      required: [ data ]
+    AddressUpdatedEvent:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AddressEvent"
+      properties:
+        data:
+          $ref: "#/components/schemas/AddressChange"
+      required: [ data ]
+    AddressAddition:
+      description: The event payload in JSON format
+      type: object
+      properties:
+        employerId:
+          type: string
+        addedAddress:
+          $ref: "#/components/schemas/Address"
+      required: [ employerId, addedAddress ]
+    AddressRemoval:
+      description: The event payload in JSON format
+      type: object
+      properties:
+        employerId:
+          type: string
+        removedAddressId:
+          type: string
+        required: [ employerId, removedAddressId ]
+    AddressChange:
+      description: The event payload in JSON format
+      type: object
+      properties:
+        employerId:
+          type: string
+        oldAddress:
+          $ref: "#/components/schemas/Address"
+        newAddress:
+          $ref: "#/components/schemas/Address"
+      required: [ employerId, oldAddress, newAddress ]
+    Address:
+      type: object
+      properties:
+        id:
+          type: string
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        country:
+          type: string
+      required: [id, country, addressLine1]
