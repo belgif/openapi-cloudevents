@@ -5,6 +5,7 @@ info:
   description: |
     The employer event API allows you
     to do something....
+defaultContentType: application/json
 servers:
   artemisJmsBroker:
     #jms bindings from https://github.com/asyncapi/bindings/tree/master/jms#server
@@ -32,6 +33,7 @@ operations:
     channel:
       $ref: '#/channels/AddressEventsChannel'
 components:
+  # Problem with asyncapi parser when multiple messages are defined, see https://github.com/asyncapi/parser-js/issues/1101
   messages:
     # AddressAddedEvent:
     #   payload:
