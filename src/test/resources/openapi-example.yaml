@@ -5,7 +5,8 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-servers: []
+servers:
+  - url: /eventDemo/v1
 paths:
   /events:
     get:
@@ -41,7 +42,8 @@ paths:
           description: Event created
         default:
           $ref: "./belgif/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
-
+  x-ignore-rules:
+    hlth-res: A health resource is not in scope of this demo
 components:
   schemas:
     AddressCloudEventBatch:

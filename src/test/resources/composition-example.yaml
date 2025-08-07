@@ -59,7 +59,7 @@ components:
           type: string
         removedAddressId:
           type: string
-        required: [ employerId, removedAddressId ]
+      required: [ employerId, removedAddressId ]
     AddressChange:
       description: The event payload in JSON format
       type: object
