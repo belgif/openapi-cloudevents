@@ -11,13 +11,13 @@ components:
   schemas:
     AddressEvent:
       allOf:
-        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/CloudEventBase"
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsyncMessageBase"
       discriminator:
         propertyName: type
         mapping:
-          "be.nsso.employer.address.updated": AddressUpdatedEvent
-          "be.nsso.employer.address.added": AddressAddedEvent
-          "be.nsso.employer.address.removed": AddressRemovedEvent
+          "be.nsso.employer.v1.addresses.notify.updated": AddressUpdatedEvent
+          "be.nsso.employer.v1.addresses.notify.added": AddressAddedEvent
+          "be.nsso.employer.v1.addresses.notify.removed": AddressRemovedEvent
     AddressAddedEvent:
       type: object
       allOf:

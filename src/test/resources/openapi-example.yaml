@@ -27,7 +27,7 @@ paths:
               x-ignore-rules:
                 evo-object: allow array as top level data structure in order to comply with the CloudEvents standard
         default:
-          $ref: "./belgif/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
+          $ref: "../../main/openapi/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
     post:
       summary: Register an address change event
       operationId: createEvent
@@ -41,7 +41,7 @@ paths:
         "201":
           description: Event created
         default:
-          $ref: "./belgif/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
+          $ref: "../../main/openapi/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
   x-ignore-rules:
     hlth-res: A health resource is not in scope of this demo
 components:
