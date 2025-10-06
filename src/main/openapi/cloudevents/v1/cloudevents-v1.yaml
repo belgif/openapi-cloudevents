@@ -34,14 +34,14 @@ components:
             The type SHOULD be prefixed with a reverse-DNS name. The prefixed domain dictates the organization which defines the semantics of this message type.
           type: string
           minLength: 1
-          example: "be.nsso.employer.v1.employers.address.notify.updated"
+          example: "be.belgif.example.meeting.v3.meetings.create"
         service:
           description: |
             Name of the service (API) that defines the format and exchange protocol of this message.
             Recommended to use reverse DNS notation, with the last segment being the major version number prefixed by the letter `v`.
           type: string
           minLength: 1
-          example: "be.belgif.example.meeting.v1"
+          example: "be.belgif.example.meeting.v3"
         source:
           type: string
           format: uri-reference
@@ -58,7 +58,7 @@ components:
             scheme to create unique source identifiers.<br>
 
             An absolute URI is RECOMMENDED
-          example: "urn:asyncmsg-source:nsso:employer-register"
+          example: "urn:async-source:client:123"
         datacontenttype:
           type: string
           minLength: 1
@@ -72,7 +72,6 @@ components:
           type: string
           minLength: 1
           description: Subject of the message (optional, may also be only present in payload)
-          example: "employer:123456"
           nullable: true
           x-ignore-rules:
             jsn-null: allow null to comply with CloudEvents 1.0 spec
@@ -95,10 +94,11 @@ components:
       example:
         {
           "specversion": "1.0",
-          "id": "1",
-          "service": "be.belgif.meeting.v3",
-          "source": "urn:cbe:enterprisenumber:9876543210",
-          "type": "be.belgif.meeting.v3.meetings.create",
+          "id": "550e8400-e29b-41d4-a716-446655440000",
+          "service": "be.belgif.example.meeting.v3",
+          "type": "be.belgif.example.meeting.v3.meetings.create",
+          "source": "urn:async-source:client:123",
+          "subject": "132456",
           "data": { "...": "..." }
         }
 
@@ -181,12 +181,12 @@ components:
       example:
         {
           "specversion": "1.0",
-          "id": "2",
-          "service": "be.belgif.meeting.v3",
-          "source": "urn:cbe:enterprisenumber:0123456789",
-          "type": "be.belgif.meeting.v3.meetings.create.reply",
-          "relatedto": "1",
-          "relatedtosource": "urn:cbe:enterprisenumber:1234567890",
+          "id": "123ef800-e29b-41d4-a716-546655440001",
+          "service": "be.belgif.example.meeting.v3",
+          "source": "urn:async-source:be.belgif.example",
+          "type": "be.belgif.example.meeting.v3.meetings.create.reply",
+          "relatedto": "550e8400-e29b-41d4-a716-446655440000",
+          "relatedtosource": "urn:async-source:client:123",
           "subject": "132456",
           "data": { "...": "..." }
         }
@@ -204,17 +204,16 @@ components:
         {
           "specversion": "1.0",
           "id": "987654-1234-1235-4567489798",
-          "service": "be.belgif.meeting.v3",
-          "source": "urn:cbe:enterprisenumber:0123456789",
-          "type": "be.belgif.meeting.v3.meetings.create.problemReply",
+          "service": "be.belgif.example.meeting.v3",
+          "source": "urn:async-source:be.belgif.example",
+          "type": "be.belgif.example.meeting.v3.meetings.create.problemReply",
           "datacontenttype": "application/problem+json",
-          "relatedto": "1",
-          "relatedtosource": "urn:cbe:enterprisenumber:1234567890",
+          "relatedto": "550e8400-e29b-41d4-a716-446655440000",
+          "relatedtosource": "urn:async-source:client:123",
           "data": {
             "type": "urn:problem-type:belgif:badRequest",
             "href": "https://www.belgif.be/specification/rest/api-guide/problems/badRequest.html",
             "title": "Bad Request",
-            "status": 400,
             "detail":  "The input message is incorrect",
             "instance": "urn:uuid:987654-1234-1235-4567489798",
             "issues": [

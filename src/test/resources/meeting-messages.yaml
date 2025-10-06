@@ -1,0 +1,96 @@
+openapi: "3.0.3"
+info:
+  title: Message definitions of example "meeting" API
+  version: "${project.version}"
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers: []
+paths: {}
+components:
+  schemas:
+    MeetingMessage:
+      description: Common parent schema of all async messages in the meeting API
+      # common parent is not really needed if only using the message type schemas from AsyncAPI
+      allOf:
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousMessageBase"
+      discriminator:
+        propertyName: type
+        mapping:
+          "be.belgif.example.meeting.v3.meetings.create": CreateMeetingMessage
+          "be.belgif.example.meeting.v3.meetings.create.reply": CreateMeetingReplyMessage
+          "be.belgif.example.meeting.v3.meetings.create.problemReply": CreateMeetingProblemReplyMessage
+          "be.belgif.example.meeting.v3.meetings.notify.invited": MeetingInvitedMessage
+          "be.belgif.example.meeting.v3.meetings.notify.canceled": MeetingCanceledMessage
+    Meeting:
+      description: A meeting
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifier of the meeting
+        invitees:
+          type: array
+          items:
+            description: "Identifier of a person"
+            type: string
+        room:
+          type: string
+        period:
+          type: object
+          properties:
+            start:
+              type: string
+              format: date-time
+            end:
+              type: string
+              format: date-time
+          required: [start, end]
+        required: [invitees, room, period]
+    CreateMeetingMessage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/MeetingMessage"
+      properties:
+        data:
+          $ref: "#/components/schemas/Meeting"
+      required: [data]
+    CreateMeetingReplyMessage:
+      type: object
+      allOf:
+        # extends reply message, which adds relatedto(source) properties
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousReplyMessageBase"
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              description: Identifier of meeting that was created
+              type: string
+          required: [id]
+      required: [ data ]
+    CreateMeetingProblemReplyMessage:
+      allOf:
+        - $ref: "#/components/schemas/MeetingMessage"
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousProblemReplyMessage"
+    MeetingInvitedMessage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/MeetingMessage"
+      properties:
+        data:
+          $ref: "#/components/schemas/Meeting"
+      required: [ data ]
+    MeetingCanceledMessage:
+      type: object
+      allOf:
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousMessageBase"
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              description: Identifier of the meeting
+              type: string
+          required: [id]
+      required: [ data ]
