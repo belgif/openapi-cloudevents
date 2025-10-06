@@ -219,10 +219,10 @@ components:
             "issues": [
               {
                 "type": "urn:problem-type:belgif:input-validation:schemaViolation",
-                "detail": "examplePropertyWithPattern a2345678901 doesn't match pattern '^\\d{11}$'",
+                "detail": "value 123 of invitees[0] is not of type string",
                 "in": "body",
-                "name": "items[0].examplePropertyWithPattern",
-                "value": "a2345678901"
+                "name": "invitees[0]",
+                "value": 123
               }
             ]
           }
