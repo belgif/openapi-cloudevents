@@ -1,0 +1,75 @@
+asyncapi: 3.0.0
+# !! AsyncAPI tooling can't be used for this document currently because of a problem with AsyncAPI tooling with referenced OpenAPI schemas, see https://github.com/asyncapi/openapi-schema-parser/issues/275
+info:
+  title: Meeting
+  version: 3.0.0
+  description: |
+    The meeting API allows you to manage meetings and get notifications upon meeting changes.
+    This is an example API description to demonstrate using AsyncAPI for asynchronous messaging compliant with the Belgif guide.
+defaultContentType: application/json
+servers:
+  artemisJmsBroker:
+    #jms bindings from https://github.com/asyncapi/bindings/tree/master/jms#server
+    host: 'my-broker:1234'
+    protocol: jms
+    description: The broker accessed via JMS.
+    bindings:
+      jms:
+        jmsConnectionFactory: org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory
+channels:
+  MeetingSendChannel:
+    summary: Channel to send meeting-related messages
+    address: be.belgif.example.meeting.v3
+    messages:
+      "be.belgif.example.meeting.v3.meetings.create":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.create'
+  MeetingReceiveChannel:
+    summary: Channel to send meeting-related messages
+    address: be.belgif.example.meeting.v3
+    messages: #Spec defines that "Every message sent to this channel MUST be valid against one, and only one, of the message objects defined in this map."
+      "be.belgif.example.meeting.v3.meetings.create.reply":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.create.reply'
+      "be.belgif.example.meeting.v3.meetings.create.problemReply":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.create.problemReply'
+      "be.belgif.example.meeting.v3.meetings.notify.invited":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.notify.invited'
+      "be.belgif.example.meeting.v3.meetings.notify.canceled":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.notify.canceled'
+operations:
+  sendMeetingMessage:
+    summary: "Send messages related to meetings"
+    action: receive
+    channel:
+      $ref: '#/channels/MeetingSendChannel'
+  receiveMeetingMessage:
+    summary: "Receive messages related to meetings"
+    action: receive
+    channel:
+      $ref: '#/channels/MeetingReceiveChannel'
+components:
+  messages:
+    "be.belgif.example.meeting.v3.meetings.create":
+      payload:
+        schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
+        schema:
+          $ref: './meeting-messages.yaml#/components/schemas/CreateMeetingMessage'
+    "be.belgif.example.meeting.v3.meetings.create.reply":
+      payload:
+        schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
+        schema:
+          $ref: './meeting-messages.yaml#/components/schemas/CreateMeetingReplyMessage'
+    "be.belgif.example.meeting.v3.meetings.create.problemReply":
+      payload:
+        schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
+        schema:
+          $ref: './meeting-messages.yaml#/components/schemas/CreateMeetingProblemReplyMessage'
+    "be.belgif.example.meeting.v3.meetings.notify.invited":
+      payload:
+        schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
+        schema:
+          $ref: './meeting-messages.yaml#/components/schemas/MeetingInvitedMessage'
+    "be.belgif.example.meeting.v3.meetings.notify.canceled":
+      payload:
+        schemaFormat: application/vnd.oai.openapi+yaml;version=3.0.0
+        schema:
+          $ref: './meeting-messages.yaml#/components/schemas/MeetingCanceledMessage'

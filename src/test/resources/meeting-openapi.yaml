@@ -1,0 +1,55 @@
+openapi: "3.0.3"
+info:
+  title: Meeting
+  version: 3.0.0
+  description: |
+    The meeting API allows you to manage meetings and get notifications upon meeting changes.
+    This is an example API description to demonstrate using OpenAPI for asynchronous messaging over REST compliant with the Belgif guide.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: /meeting/v3
+paths:
+  /messages:
+    get:
+      summary: Retrieve async messages related to meetings
+      operationId: getMessages
+      parameters:
+        - name: "cursor"
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Batch of cloud events
+          content:
+            application/cloudevents-batch+json:
+              schema:
+                $ref: "#/components/schemas/MeetingMessageBatch"
+              x-ignore-rules:
+                evo-object: allow array as top level data structure in order to comply with the CloudEvents standard
+        default:
+          $ref: "../../main/openapi/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
+    post:
+      summary: Register a meeting meesage
+      operationId: createMeeting
+      requestBody:
+        content:
+          application/cloudevents+json:
+            schema:
+              $ref: "./meeting-messages.yaml#/components/schemas/MeetingMessage"
+        required: true
+      responses:
+        "201":
+          description: Event created
+        default:
+          $ref: "../../main/openapi/problem/v1/problem-v1.yaml#/components/responses/ProblemResponse"
+  x-ignore-rules:
+    hlth-res: A health resource is not in scope of this demo
+components:
+  schemas:
+    MeetingMessageBatch:
+      type: array
+      items:
+        $ref: "./meeting-messages.yaml#/components/schemas/MeetingMessage"
