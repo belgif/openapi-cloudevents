@@ -165,19 +165,19 @@ components:
 
     AsynchronousReplyMessageBase:
       description: Context attributes for reply messages
+      type: object
       allOf:
         - $ref: "#/components/schemas/AsynchronousMessageBase"
-      type: object
-      properties:
-        relatedto:
-          description: The `id` of the corresponding request message
-          type: string
-          minLength: 1
-        relatedtosource:
-          description: The `source` of the corresponding request message
-          type: string
-          minLength: 1
-      required: [relatedto, relatedtosource]
+        - properties:
+            relatedto:
+              description: The `id` of the corresponding request message
+              type: string
+              minLength: 1
+            relatedtosource:
+              description: The `source` of the corresponding request message
+              type: string
+              minLength: 1
+          required: [relatedto, relatedtosource]
       example:
         {
           "specversion": "1.0",
@@ -193,13 +193,13 @@ components:
 
     AsynchronousProblemReplyMessage:
       description: An asynchronous problem reply message
+      type: object
       allOf:
         - $ref: "#/components/schemas/AsynchronousReplyMessageBase"
-      type: object
-      properties:
-        data:
-          $ref: "../../problem/v1/problem-v1.yaml#/components/schemas/Problem"
-      required: [data]
+        - properties:
+            data:
+              $ref: "../../problem/v1/problem-v1.yaml#/components/schemas/Problem"
+          required: [data]
       example:
         {
           "specversion": "1.0",

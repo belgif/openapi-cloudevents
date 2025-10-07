@@ -101,6 +101,7 @@ components:
           }
         }
     CreateMeetingProblemReplyMessage:
+      type: object
       allOf:
         - $ref: "#/components/schemas/MeetingMessage"
         - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousProblemReplyMessage"
