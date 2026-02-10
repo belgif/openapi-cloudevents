@@ -227,3 +227,23 @@ components:
             ]
           }
         }
+
+    AsynchronousMessagesBatch:
+      type: object
+      description: A large batch of cloud events, often as content of a file.
+        The number of messages may be very high, so avoid loading them all in memory.
+      properties:
+        context:
+          type: object
+          description:
+            Context of the exchanged batch of asynchronous messages.  
+            The context properties are defined by the party defining the exchange of the batch.
+            
+            Context properties SHOULD NOT be required to process messages functionally by an application, but MAY support technical aspects during message transfer like routing at batch-level or authentication.
+        messages:
+          type: array
+          description: "A list of asynchronous messages.
+            Each message should be self-contained: an application processing the message content shouldn't be required to retrieve business information from the transfer protocol or batch-level context."
+          items:
+            $ref: "#/components/schemas/AsynchronousMessage"
+      required: [messages]
