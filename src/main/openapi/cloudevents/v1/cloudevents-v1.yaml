@@ -91,16 +91,6 @@ components:
           x-ignore-rules:
             jsn-null: allow null to comply with CloudEvents 1.0 spec
       required: [ id, type, service, specversion, source ]
-      example:
-        {
-          "specversion": "1.0",
-          "id": "550e8400-e29b-41d4-a716-446655440000",
-          "service": "be.belgif.example.meeting.v3",
-          "type": "be.belgif.example.meeting.v3.meetings.create",
-          "source": "urn:async-source:client:123",
-          "subject": "132456",
-          "data": { "...": "..." }
-        }
 
     AsynchronousMessage:
       description: An asynchronous message represented using the [CloudEvents standard](https://github.com/cloudevents/spec).
@@ -162,6 +152,16 @@ components:
 #              jsn-null: allow null to comply with CloudEvents 1.0 spec
       x-ignore-rules:
         jsn-naming: allow underscore in data_base64 property in order to comply with the CloudEvents standard
+      example:
+        {
+          "specversion": "1.0",
+          "id": "550e8400-e29b-41d4-a716-446655440000",
+          "service": "be.belgif.example.meeting.v3",
+          "type": "be.belgif.example.meeting.v3.meetings.create",
+          "source": "urn:async-source:client:123",
+          "subject": "132456",
+          "data": { "...": "..." }
+        }
 
     AsynchronousReplyMessageBase:
       description: Context attributes for reply messages
@@ -173,23 +173,13 @@ components:
               description: The `id` of the corresponding request message
               type: string
               minLength: 1
+              example: "550e8400-e29b-41d4-a716-446655440000"
             relatedtosource:
               description: The `source` of the corresponding request message
               type: string
               minLength: 1
+              example: "urn:async-source:client:123"
           required: [relatedto, relatedtosource]
-      example:
-        {
-          "specversion": "1.0",
-          "id": "123ef800-e29b-41d4-a716-546655440001",
-          "service": "be.belgif.example.meeting.v3",
-          "source": "urn:async-source:be.belgif.example",
-          "type": "be.belgif.example.meeting.v3.meetings.create.reply",
-          "relatedto": "550e8400-e29b-41d4-a716-446655440000",
-          "relatedtosource": "urn:async-source:client:123",
-          "subject": "132456",
-          "data": { "...": "..." }
-        }
 
     AsynchronousProblemReplyMessage:
       description: An asynchronous problem reply message
