@@ -81,7 +81,7 @@
                 <interfaceOnly>true</interfaceOnly>
                 <useSpringBoot3>true</useSpringBoot3>
                 <useSpringController>true</useSpringController>
-<!--                <useOneOfInterfaces>true</useOneOfInterfaces>-->
+                <useOneOfInterfaces>true</useOneOfInterfaces> <!-- whether to use a java interface to describe a set of oneOf options, where each option is a class that implements the interface -->
                 <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
                 <skipDefaultInterface>true</skipDefaultInterface>
                 <apiPackage>be.belgium.gcloud.rest.reference.api</apiPackage> <!-- change to Java package for your project -->
