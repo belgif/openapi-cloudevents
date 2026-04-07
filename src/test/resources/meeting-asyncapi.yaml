@@ -38,7 +38,7 @@ channels:
 operations:
   sendMeetingMessage:
     summary: "Send messages related to meetings"
-    action: receive
+    action: send
     channel:
       $ref: '#/channels/MeetingSendChannel'
   receiveMeetingMessage:
