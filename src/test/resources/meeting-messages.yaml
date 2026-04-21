@@ -22,11 +22,11 @@ components:
       discriminator:
         propertyName: type
         mapping:
-          "be.belgif.example.meeting.v3.meetings.create": CreateMeetingMessage
-          "be.belgif.example.meeting.v3.meetings.create.reply": CreateMeetingReplyMessage
-          "be.belgif.example.meeting.v3.meetings.create.problemReply": CreateMeetingProblemReplyMessage
-          "be.belgif.example.meeting.v3.meetings.notify.invited": MeetingInvitedMessage
-          "be.belgif.example.meeting.v3.meetings.notify.canceled": MeetingCanceledMessage
+          "be.belgif.example.meeting.v3.meetings.create": "#/components/schemas/CreateMeetingMessage"
+          "be.belgif.example.meeting.v3.meetings.create.reply": "#/components/schemas/CreateMeetingReplyMessage"
+          "be.belgif.example.meeting.v3.meetings.create.problemReply": "#/components/schemas/CreateMeetingProblemReplyMessage"
+          "be.belgif.example.meeting.v3.meetings.notify.invited": "#/components/schemas/MeetingInvitedMessage"
+          "be.belgif.example.meeting.v3.meetings.notify.canceled": "#/components/schemas/MeetingCanceledMessage"
     Meeting:
       description: A meeting
       type: object
