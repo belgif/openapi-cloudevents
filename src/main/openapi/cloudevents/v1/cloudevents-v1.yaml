@@ -234,6 +234,7 @@ components:
         The number of messages may be very high, so avoid loading them all in memory.
       properties:
         context:
+          title: AsynchronousMessagesBatchContext
           type: object
           description:
             Context of the exchanged batch of asynchronous messages.  
