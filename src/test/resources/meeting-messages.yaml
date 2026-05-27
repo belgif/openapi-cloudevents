@@ -10,18 +10,23 @@ paths: {}
 components:
   schemas:
     MeetingMessage:
-      description: Common parent schema of all async messages in the meeting API
-      # common parent is not needed if only using the message type schemas from AsyncAPI
-      allOf:
-        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousMessageBase"
+      description: Common schema of all async messages in the meeting API
+      type: object
+      # this common parent is not needed if only referencing the specific message type from AsyncAPI
+      oneOf:
+        - $ref: "#/components/schemas/CreateMeetingMessage"
+        - $ref: "#/components/schemas/CreateMeetingReplyMessage"
+        - $ref: "#/components/schemas/CreateMeetingProblemReplyMessage"
+        - $ref: "#/components/schemas/MeetingInvitedMessage"
+        - $ref: "#/components/schemas/MeetingCanceledMessage"
       discriminator:
         propertyName: type
         mapping:
-          "be.belgif.example.meeting.v3.meetings.create": CreateMeetingMessage
-          "be.belgif.example.meeting.v3.meetings.create.reply": CreateMeetingReplyMessage
-          "be.belgif.example.meeting.v3.meetings.create.problemReply": CreateMeetingProblemReplyMessage
-          "be.belgif.example.meeting.v3.meetings.notify.invited": MeetingInvitedMessage
-          "be.belgif.example.meeting.v3.meetings.notify.canceled": MeetingCanceledMessage
+          "be.belgif.example.meeting.v3.meetings.create": "#/components/schemas/CreateMeetingMessage"
+          "be.belgif.example.meeting.v3.meetings.create.reply": "#/components/schemas/CreateMeetingReplyMessage"
+          "be.belgif.example.meeting.v3.meetings.create.problemReply": "#/components/schemas/CreateMeetingProblemReplyMessage"
+          "be.belgif.example.meeting.v3.meetings.notify.invited": "#/components/schemas/MeetingInvitedMessage"
+          "be.belgif.example.meeting.v3.meetings.notify.canceled": "#/components/schemas/MeetingCanceledMessage"
     Meeting:
       description: A meeting
       type: object
@@ -46,11 +51,11 @@ components:
               type: string
               format: date-time
           required: [start, end]
-        required: [invitees, period]
+      required: [invitees, period]
     CreateMeetingMessage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/MeetingMessage"
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousMessageBase"
       properties:
         data:
           $ref: "#/components/schemas/Meeting"
@@ -74,7 +79,6 @@ components:
     CreateMeetingReplyMessage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/MeetingMessage"
         # extends reply message, which adds relatedto(source) properties
         - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousReplyMessageBase"
       properties:
@@ -103,7 +107,6 @@ components:
     CreateMeetingProblemReplyMessage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/MeetingMessage"
         - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousProblemReplyMessage"
       example:
         {
@@ -135,7 +138,7 @@ components:
     MeetingInvitedMessage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/MeetingMessage"
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousMessageBase"
       properties:
         data:
           $ref: "#/components/schemas/Meeting"
@@ -160,7 +163,7 @@ components:
     MeetingCanceledMessage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/MeetingMessage"
+        - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousMessageBase"
       properties:
         data:
           type: object
