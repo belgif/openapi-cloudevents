@@ -38,7 +38,7 @@ paths:
         content:
           application/cloudevents+json:
             schema:
-              $ref: "./meeting-messages.yaml#/components/schemas/MeetingMessage"
+              $ref: "#/components/schemas/SentMeetingMessage"
         required: true
       responses:
         "201":
@@ -49,7 +49,32 @@ paths:
     hlth-res: A health resource is not in scope of this demo
 components:
   schemas:
+    SentMeetingMessage:
+      description: Schema combining all async messages that can be sent in the meeting API
+      type: object
+      oneOf:
+        - $ref: "./meeting-messages.yaml#/components/schemas/CreateMeetingRequestMessage"
+      discriminator:
+        propertyName: type
+        mapping:
+          "be.belgif.example.meeting.v3.meeting.create.request": "./meeting-messages.yaml#/components/schemas/CreateMeetingRequestMessage"
+
+    ReceivedMeetingMessage:
+      description: Schema combining all async messages that can be received in the meeting API
+      type: object
+      oneOf:
+        - $ref: "./meeting-messages.yaml#/components/schemas/CreateMeetingReplyMessage"
+        - $ref: "./meeting-messages.yaml#/components/schemas/CreateMeetingProblemReplyMessage"
+        - $ref: "./meeting-messages.yaml#/components/schemas/MeetingInvitedMessage"
+        - $ref: "./meeting-messages.yaml#/components/schemas/MeetingCanceledMessage"
+      discriminator:
+        propertyName: type
+        mapping:
+          "be.belgif.example.meeting.v3.meeting.create.reply": "./meeting-messages.yaml#/components/schemas/CreateMeetingReplyMessage"
+          "be.belgif.example.meeting.v3.meeting.create.problemReply": "./meeting-messages.yaml#/components/schemas/CreateMeetingProblemReplyMessage"
+          "be.belgif.example.meeting.v3.meeting.invited": "./meeting-messages.yaml#/components/schemas/MeetingInvitedMessage"
+          "be.belgif.example.meeting.v3.meeting.canceled": "./meeting-messages.yaml#/components/schemas/MeetingCanceledMessage"
     MeetingMessageBatch:
       type: array
       items:
-        $ref: "./meeting-messages.yaml#/components/schemas/MeetingMessage"
+        $ref: "#/components/schemas/ReceivedMeetingMessage"

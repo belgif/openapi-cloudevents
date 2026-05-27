@@ -21,20 +21,20 @@ channels:
     summary: Channel to send meeting-related messages
     address: be.belgif.example.meeting.v3.sendQueue
     messages:
-      "be.belgif.example.meeting.v3.meetings.create":
-        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.create'
+      "be.belgif.example.meeting.v3.meeting.create.request":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meeting.create.request'
   MeetingReceiveChannel:
     summary: Channel to receive meeting-related messages
     address: be.belgif.example.meeting.v3.receiveQueue
     messages: # AsyncAPI spec defines that "Every message sent to this channel MUST be valid against one, and only one, of the message objects defined in this map."
-      "be.belgif.example.meeting.v3.meetings.create.reply":
-        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.create.reply'
-      "be.belgif.example.meeting.v3.meetings.create.problemReply":
-        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.create.problemReply'
-      "be.belgif.example.meeting.v3.meetings.notify.invited":
-        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.notify.invited'
-      "be.belgif.example.meeting.v3.meetings.notify.canceled":
-        $ref: '#/components/messages/be.belgif.example.meeting.v3.meetings.notify.canceled'
+      "be.belgif.example.meeting.v3.meeting.create.reply":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meeting.create.reply'
+      "be.belgif.example.meeting.v3.meeting.create.problemReply":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meeting.create.problemReply'
+      "be.belgif.example.meeting.v3.meeting.invited":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meeting.invited'
+      "be.belgif.example.meeting.v3.meeting.canceled":
+        $ref: '#/components/messages/be.belgif.example.meeting.v3.meeting.canceled'
 operations:
   # the messages referenced by each operation MUST be part of the list of messages on the channel used by the operation
   # if omitted, the operation is expected to accept any message allowed on the channel
@@ -44,31 +44,31 @@ operations:
     channel:
       $ref: '#/channels/MeetingSendChannel'
     messages:
-      - $ref: '#/channels/MeetingSendChannel/messages/be.belgif.example.meeting.v3.meetings.create'
+      - $ref: '#/channels/MeetingSendChannel/messages/be.belgif.example.meeting.v3.meeting.create.request'
     reply:
       channel:
         $ref: '#/channels/MeetingReceiveChannel'
       messages:
-        - $ref: '#/channels/MeetingReceiveChannel/messages/be.belgif.example.meeting.v3.meetings.create.reply'
-        - $ref: '#/channels/MeetingReceiveChannel/messages/be.belgif.example.meeting.v3.meetings.create.problemReply'
+        - $ref: '#/channels/MeetingReceiveChannel/messages/be.belgif.example.meeting.v3.meeting.create.reply'
+        - $ref: '#/channels/MeetingReceiveChannel/messages/be.belgif.example.meeting.v3.meeting.create.problemReply'
   notifyMeetingInvited:
     summary: "Receive notification that you were invited to a meeting"
     action: receive
     channel:
       $ref: '#/channels/MeetingReceiveChannel'
     messages:
-      - $ref: '#/channels/MeetingReceiveChannel/messages/be.belgif.example.meeting.v3.meetings.notify.invited'
+      - $ref: '#/channels/MeetingReceiveChannel/messages/be.belgif.example.meeting.v3.meeting.invited'
   notifyMeetingCanceled:
     summary: "Receive notification that a meeting was canceled"
     action: receive
     channel:
       $ref: '#/channels/MeetingReceiveChannel'
     messages:
-      - $ref: '#/channels/MeetingReceiveChannel/messages/be.belgif.example.meeting.v3.meetings.notify.canceled'
+      - $ref: '#/channels/MeetingReceiveChannel/messages/be.belgif.example.meeting.v3.meeting.canceled'
 components:
   messages:
-    "be.belgif.example.meeting.v3.meetings.create":
-      title: be.belgif.example.meeting.v3.meetings.create
+    "be.belgif.example.meeting.v3.meeting.create.request":
+      title: be.belgif.example.meeting.v3.meeting.create.request
       description: Request to create a meeting
       payload:
         schema:
@@ -79,7 +79,7 @@ components:
               "specversion": "1.0",
               "id": "550e8400-e29b-41d4-a716-446655440000",
               "service": "be.belgif.example.meeting.v3",
-              "type": "be.belgif.example.meeting.v3.meetings.create",
+              "type": "be.belgif.example.meeting.v3.meeting.create.request",
               "source": "urn:async-source:client:123",
               "subject": "132456",
               "data": {
@@ -90,11 +90,11 @@ components:
                 }
               }
             }
-    "be.belgif.example.meeting.v3.meetings.create.reply":
+    "be.belgif.example.meeting.v3.meeting.create.reply":
       payload:
         schema:
           $ref: '#/components/schemas/CreateMeetingReplyMessage'
-    "be.belgif.example.meeting.v3.meetings.create.problemReply":
+    "be.belgif.example.meeting.v3.meeting.create.problemReply":
       payload:
         schema:
           $ref: '#/components/schemas/AsynchronousProblemReplyMessage'
@@ -105,7 +105,7 @@ components:
               "id": "987654-1234-1235-4567489798",
               "service": "be.belgif.example.meeting.v3",
               "source": "urn:async-source:be.belgif.example",
-              "type": "be.belgif.example.meeting.v3.meetings.create.problemReply",
+              "type": "be.belgif.example.meeting.v3.meeting.create.problemReply",
               "datacontenttype": "application/problem+json",
               "relatedto": "550e8400-e29b-41d4-a716-446655440000",
               "relatedtosource": "urn:async-source:client:123",
@@ -126,11 +126,11 @@ components:
                 ]
               }
             }
-    "be.belgif.example.meeting.v3.meetings.notify.invited":
+    "be.belgif.example.meeting.v3.meeting.invited":
       payload:
         schema:
           $ref: '#/components/schemas/MeetingInvitedMessage'
-    "be.belgif.example.meeting.v3.meetings.notify.canceled":
+    "be.belgif.example.meeting.v3.meeting.canceled":
       payload:
         schema:
           $ref: '#/components/schemas/MeetingCanceledMessage'
@@ -173,7 +173,7 @@ components:
           "specversion": "1.0",
           "id": "550e8400-e29b-41d4-a716-446655440000",
           "service": "be.belgif.example.meeting.v3",
-          "type": "be.belgif.example.meeting.v3.meetings.create",
+          "type": "be.belgif.example.meeting.v3.meeting.create.request",
           "source": "urn:async-source:client:123",
           "subject": "132456",
           "data": {
@@ -204,7 +204,7 @@ components:
           "id": "123ef800-e29b-41d4-a716-546655440001",
           "service": "be.belgif.example.meeting.v3",
           "source": "urn:async-source:be.belgif.example",
-          "type": "be.belgif.example.meeting.v3.meetings.create.reply",
+          "type": "be.belgif.example.meeting.v3.meeting.create.reply",
           "relatedto": "550e8400-e29b-41d4-a716-446655440000",
           "relatedtosource": "urn:async-source:client:123",
           "subject": "132456",
@@ -225,7 +225,7 @@ components:
           "specversion": "1.0",
           "id": "450e8400-e29b-41d4-a716-446655440007",
           "service": "be.belgif.example.meeting.v3",
-          "type": "be.belgif.example.meeting.v3.meetings.notify.invited",
+          "type": "be.belgif.example.meeting.v3.meeting.invited",
           "source": "urn:async-source:be.belgif.example",
           "subject": "132456",
           "data": {
@@ -255,7 +255,7 @@ components:
           "specversion": "1.0",
           "id": "650e8400-e29b-41d4-a716-446655440006",
           "service": "be.belgif.example.meeting.v3",
-          "type": "be.belgif.example.meeting.v3.meetings.notify.canceled",
+          "type": "be.belgif.example.meeting.v3.meeting.canceled",
           "source": "urn:async-source:be.belgif.example",
           "subject": "132456",
           "data": {
@@ -289,7 +289,7 @@ components:
             The type SHOULD be prefixed with a reverse-DNS name. The prefixed domain dictates the organization which defines the semantics of this message type.
           type: string
           minLength: 1
-          example: "be.belgif.example.meeting.v3.meetings.create"
+          example: "be.belgif.example.meeting.v3.meeting.create.request"
         service:
           description: |
             Name of the service (API) that defines the format and exchange protocol of this message.
@@ -376,7 +376,7 @@ components:
           "id": "987654-1234-1235-4567489798",
           "service": "be.belgif.example.meeting.v3",
           "source": "urn:async-source:be.belgif.example",
-          "type": "be.belgif.example.meeting.v3.meetings.create.problemReply",
+          "type": "be.belgif.example.meeting.v3.meeting.create.problemReply",
           "datacontenttype": "application/problem+json",
           "relatedto": "550e8400-e29b-41d4-a716-446655440000",
           "relatedtosource": "urn:async-source:client:123",

@@ -34,7 +34,7 @@ components:
             The type SHOULD be prefixed with a reverse-DNS name. The prefixed domain dictates the organization which defines the semantics of this message type.
           type: string
           minLength: 1
-          example: "be.belgif.example.meeting.v3.meetings.create"
+          example: "be.belgif.example.meeting.v3.meeting.canceled"
         service:
           description: |
             Name of the service (API) that defines the format and exchange protocol of this message.
@@ -157,7 +157,7 @@ components:
           "specversion": "1.0",
           "id": "550e8400-e29b-41d4-a716-446655440000",
           "service": "be.belgif.example.meeting.v3",
-          "type": "be.belgif.example.meeting.v3.meetings.create",
+          "type": "be.belgif.example.meeting.v3.meeting.canceled",
           "source": "urn:async-source:client:123",
           "subject": "132456",
           "data": { "...": "..." }
@@ -196,7 +196,7 @@ components:
           "id": "987654-1234-1235-4567489798",
           "service": "be.belgif.example.meeting.v3",
           "source": "urn:async-source:be.belgif.example",
-          "type": "be.belgif.example.meeting.v3.meetings.create.problemReply",
+          "type": "be.belgif.example.meeting.v3.meeting.create.problemReply",
           "datacontenttype": "application/problem+json",
           "relatedto": "550e8400-e29b-41d4-a716-446655440000",
           "relatedtosource": "urn:async-source:client:123",
