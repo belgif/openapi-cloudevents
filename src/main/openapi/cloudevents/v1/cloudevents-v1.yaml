@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 info:
-  title: Reusable components for CloudEvents
-  description: The definitions comply with the [JSON format](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md) of the [CloudEvents 1.0 specification](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md).
+  title: Reusable components for Asynchronous Messages and CloudEvents
+  description: The definitions are extensions of the [JSON format](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/formats/json-format.md) of the [CloudEvents 1.0 specification](https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md), as specified in the [Belgif REST guide](https://www.belgif.be/specification/rest/api-guide/#events).
   version: "${project.version}"
   license:
     name: Apache 2.0
@@ -17,8 +17,8 @@ components:
       properties:
         specversion:
           type: string
-          minLength: 1
-          description: The version of the CloudEvents specification used to represent the message.
+          description: The version of the CloudEvents specification used to represent the message. Producers MUST use 1.0 to reference this version of the specification, while consumers SHOULD accept any values with major version number 1.
+          pattern: '^1\.\d+$'
           example: "1.0"
         id:
           type: string
