@@ -9,24 +9,6 @@ servers: []
 paths: {}
 components:
   schemas:
-    MeetingMessage:
-      description: Common schema of all async messages in the meeting API
-      type: object
-      # this common parent is not needed if only referencing the specific message type from AsyncAPI
-      oneOf:
-        - $ref: "#/components/schemas/CreateMeetingMessage"
-        - $ref: "#/components/schemas/CreateMeetingReplyMessage"
-        - $ref: "#/components/schemas/CreateMeetingProblemReplyMessage"
-        - $ref: "#/components/schemas/MeetingInvitedMessage"
-        - $ref: "#/components/schemas/MeetingCanceledMessage"
-      discriminator:
-        propertyName: type
-        mapping:
-          "be.belgif.example.meeting.v3.meetings.create": "#/components/schemas/CreateMeetingMessage"
-          "be.belgif.example.meeting.v3.meetings.create.reply": "#/components/schemas/CreateMeetingReplyMessage"
-          "be.belgif.example.meeting.v3.meetings.create.problemReply": "#/components/schemas/CreateMeetingProblemReplyMessage"
-          "be.belgif.example.meeting.v3.meetings.notify.invited": "#/components/schemas/MeetingInvitedMessage"
-          "be.belgif.example.meeting.v3.meetings.notify.canceled": "#/components/schemas/MeetingCanceledMessage"
     Meeting:
       description: A meeting
       type: object
@@ -52,7 +34,7 @@ components:
               format: date-time
           required: [start, end]
       required: [invitees, period]
-    CreateMeetingMessage:
+    CreateMeetingRequestMessage:
       type: object
       allOf:
         - $ref: "../../main/openapi/cloudevents/v1/cloudevents-v1.yaml#/components/schemas/AsynchronousMessageBase"
@@ -65,7 +47,7 @@ components:
           "specversion": "1.0",
           "id": "550e8400-e29b-41d4-a716-446655440000",
           "service": "be.belgif.example.meeting.v3",
-          "type": "be.belgif.example.meeting.v3.meetings.create",
+          "type": "be.belgif.example.meeting.v3.meeting.create.request",
           "source": "urn:async-source:client:123",
           "subject": "132456",
           "data": {
@@ -96,7 +78,7 @@ components:
           "id": "123ef800-e29b-41d4-a716-546655440001",
           "service": "be.belgif.example.meeting.v3",
           "source": "urn:async-source:be.belgif.example",
-          "type": "be.belgif.example.meeting.v3.meetings.create.reply",
+          "type": "be.belgif.example.meeting.v3.meeting.create.reply",
           "relatedto": "550e8400-e29b-41d4-a716-446655440000",
           "relatedtosource": "urn:async-source:client:123",
           "subject": "132456",
@@ -114,7 +96,7 @@ components:
           "id": "987654-1234-1235-4567489798",
           "service": "be.belgif.example.meeting.v3",
           "source": "urn:async-source:be.belgif.example",
-          "type": "be.belgif.example.meeting.v3.meetings.create.problemReply",
+          "type": "be.belgif.example.meeting.v3.meeting.create.problemReply",
           "datacontenttype": "application/problem+json",
           "relatedto": "550e8400-e29b-41d4-a716-446655440000",
           "relatedtosource": "urn:async-source:client:123",
@@ -148,7 +130,7 @@ components:
           "specversion": "1.0",
           "id": "450e8400-e29b-41d4-a716-446655440007",
           "service": "be.belgif.example.meeting.v3",
-          "type": "be.belgif.example.meeting.v3.meetings.notify.invited",
+          "type": "be.belgif.example.meeting.v3.meeting.invited",
           "source": "urn:async-source:be.belgif.example",
           "subject": "132456",
           "data": {
@@ -178,7 +160,7 @@ components:
           "specversion": "1.0",
           "id": "650e8400-e29b-41d4-a716-446655440006",
           "service": "be.belgif.example.meeting.v3",
-          "type": "be.belgif.example.meeting.v3.meetings.notify.canceled",
+          "type": "be.belgif.example.meeting.v3.meeting.canceled",
           "source": "urn:async-source:be.belgif.example",
           "subject": "132456",
           "data": {
